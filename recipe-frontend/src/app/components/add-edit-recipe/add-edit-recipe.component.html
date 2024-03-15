@@ -1,0 +1,63 @@
+<p-toast></p-toast>
+<div class="card flex justify-content-center" *ngIf="!showForm">
+    <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"></p-progressSpinner>
+</div>
+<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3 max-w-screen w-full" *ngIf="showForm">
+    <div class="w-full">
+        <input pInputText id="nameOfRecipe" formControlName="name" placeholder="Enter the Name of Recipe"
+            class="w-full" />
+    </div>
+    <div class="flex flex-wrap gap-3 w-full">
+        <div class="flex align-items-center" *ngFor="let type of recipeTypeOptions; let i = index">
+            <p-radioButton name="type" [value]="type.value" formControlName="type"
+                [inputId]="type.value"></p-radioButton>
+            <label [for]="type.value" class="ml-2">{{type.label}}</label>
+        </div>
+    </div>
+    <div class="flex flex-column gap-2">
+        <ng-container formArrayName="ingredients" class="max-w-screen w-full">
+            <ng-container *ngFor="let ingredient of recipeIngredients.controls; let i = index">
+                <div [formGroupName]="i" class="flex flex-row gap-2 align-items-center flex-wrap md:flex-nowrap">
+                    <input pInputText id="nameOfIngredient" formControlName="name" placeholder="Ingredient {{i+1}} Name"
+                        class="flex-grow-3 min-w-50" [readOnly]="isReadonlyMode">
+                    <p-inputGroup class="flex flex-row items-start justify-content-arounds">
+                        <input pInputText id="quantityValue" formControlName="quantityValue"
+                            placeholder="Quantity Value" class="min-w-50" [readOnly]="isReadonlyMode" />
+                        <p-inputGroupAddon class="p-0">
+                            <p-dropdown [options]="quantifierUnits" formControlName="quantity"
+                                placeholder="Select the quantifier" [group]="true" class="flex min-w-full"
+                                [readonly]="isReadonlyMode">
+                                <ng-template let-group pTemplate="group">
+                                    <div class="flex align-items-center">
+                                        <span>{{ group.label }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </p-inputGroupAddon>
+                    </p-inputGroup>
+
+                    <p-button icon="pi pi-trash" (onClick)="deleteIngredient(i)" [disabled]="isReadonlyMode"></p-button>
+                </div>
+            </ng-container>
+        </ng-container>
+        <p-button label="Ingredient" icon="pi pi-plus" (onClick)="addIngredient()" iconPos="right"
+            [disabled]="isReadonlyMode"></p-button>
+    </div>
+    <div class="flex flex-column gap-2 w-full">
+        <ng-container formArrayName="steps" class="w-full">
+            <ng-container *ngFor="let step of recipeSteps.controls; let i = index" class="w-full">
+                <div [formGroupName]="i" class="flex flex-row gap-2 w-full">
+                    <input pInputText id="stepInRecipe" formControlName="stepDetail" placeholder="Step {{i + 1}}"
+                        class="w-full" [readOnly]="isReadonlyMode">
+                    <p-button icon="pi pi-trash" (onClick)="deleteStep(i)" [disabled]="isReadonlyMode"></p-button>
+                </div>
+            </ng-container>
+        </ng-container>
+        <p-button label="Step" icon="pi pi-plus" (onClick)="addStep()" iconPos="right"
+            [disabled]="isReadonlyMode"></p-button>
+    </div>
+    <div>
+        <button pButton type="submit" label="Save" icon="pi pi-save"
+            [disabled]="!recipeForm.valid || isReadonlyMode"></button>
+    </div>
+</form>
