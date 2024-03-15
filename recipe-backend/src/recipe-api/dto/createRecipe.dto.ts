@@ -3,6 +3,7 @@ import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 export class IngredientDTO {
   name: string;
   quantity: string;
+  quantityValue: string;
 }
 
 export class CreateRecipeDTO {
