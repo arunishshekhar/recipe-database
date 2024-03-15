@@ -1,13 +1,29 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
+import { MenuItem } from 'primeng/api';
+import { Sidebar } from 'primeng/sidebar';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'recipe-frontend';
+    items: MenuItem[] | undefined;
+
+    activeItem: MenuItem | undefined;
+
+    ngOnInit() {
+        this.items = [
+            { label: 'List', icon: 'pi pi-fw pi-list', routerLink: 'list' },
+            { label: 'Add', icon: 'pi pi-fw pi-plus', routerLink: 'add' },
+        ];
+
+        this.activeItem = this.items[0];
+    }
+
+    onActiveItemChange(event: MenuItem) {
+        this.activeItem = event;
+    }
+
+    title = 'recipe-frontend';
 }
